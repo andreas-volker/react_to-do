@@ -24,22 +24,21 @@ class App extends React.Component {
         this.saveToLocal();
     }
     updateFromLocal() {
-        for (let k in this.state) {
+        Object.keys(this.state).forEach((k) => {
             if (!localStorage.hasOwnProperty(k))
-                continue;
+                return;
             let val = localStorage.getItem(k);
             try {
                 val = JSON.parse(val);
-            } catch (e) {};
-            this.setState({[k]: val});
-        }
+            } catch (e) { };
+            this.setState({ [k]: val });
+        });
     }
     saveToLocal() {
-        for (let k in this.state)
-            localStorage.setItem(k, JSON.stringify(this.state[k]));
+        Object.keys(this.state).forEach((k) => { localStorage.setItem(k, JSON.stringify(this.state[k])) });
     }
     update(k, val) {
-        this.setState({[k]: val});
+        this.setState({ [k]: val });
     }
     add() {
         const tarefa = {
@@ -56,37 +55,37 @@ class App extends React.Component {
     del(id) {
         const lista = [...this.state.lista];
         const novaLista = lista.filter(item => item.id !== id);
-        this.setState({lista: novaLista});
+        this.setState({ lista: novaLista });
     }
     render() {
         return (
-<div id="to-do">
-    <div>
-        <input
-            type="text"
-            placeholder="Adicione uma tarefa"
-            value={this.state.tarefa}
-            onChange={e => this.update("tarefa", e.target.value)}/>
-        <button
-            className="add"
-            onClick={() => this.add()}
-            disabled={!this.state.tarefa.length}>
-            <span className="add">+</span>
-        </button>
-    </div>
-    <ul>
-        {this.state.lista.map(item => {
-            return (
-                <li key={item.id}>
-                    <span>{item.val}</span>
-                    <button onClick={() => this.del(item.id)}>
-                        <span>&times;</span>
+            <div id="to-do">
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Adicione uma tarefa"
+                        value={this.state.tarefa}
+                        onChange={e => this.update("tarefa", e.target.value)} />
+                    <button
+                        className="add"
+                        onClick={() => this.add()}
+                        disabled={!this.state.tarefa.length}>
+                        <span className="add">+</span>
                     </button>
-                </li>
-            );
-        })}
-    </ul>
-</div>
+                </div>
+                <ul>
+                    {this.state.lista.map(item => {
+                        return (
+                            <li key={item.id}>
+                                <span>{item.val}</span>
+                                <button onClick={() => this.del(item.id)}>
+                                    <span>&times;</span>
+                                </button>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </div>
         );
     }
 }
